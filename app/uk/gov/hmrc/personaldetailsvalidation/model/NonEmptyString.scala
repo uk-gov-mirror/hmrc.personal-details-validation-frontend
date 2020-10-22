@@ -16,8 +16,8 @@
 
 package uk.gov.hmrc.personaldetailsvalidation.model
 
-import uk.gov.voa.valuetype.StringValue
 
-case class NonEmptyString(value: String) extends StringValue {
-  require(value.trim.length > 0, s"$typeName cannot be empty")
+
+case class NonEmptyString(value: String)   {
+  require(value.trim.length > 0, s"${getClass.getSimpleName} cannot be empty")
 }

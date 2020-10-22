@@ -17,7 +17,7 @@
 package uk.gov.voa.valuetype.play.formats
 
 import play.api.libs.json._
-import uk.gov.voa.valuetype.{StringValue, ValueType}
+import uk.gov.voa.valuetype.ValueType
 
 import scala.reflect.ClassTag
 import scala.util.{Failure, Success, Try}
@@ -68,11 +68,6 @@ trait ValueTypeFormat {
 
   }
 
-  def valueTypeWritesFor[V <: StringValue](implicit classTag: ClassTag[V]) = new Writes[V] {
-
-    def writes(value: V): JsValue = JsString(value.value)
-
-  }
 
   def format[T, V <: ValueType[T]](instantiateFromSimpleType: T => V)
                                   (implicit parse: PartialFunction[JsValue, T],

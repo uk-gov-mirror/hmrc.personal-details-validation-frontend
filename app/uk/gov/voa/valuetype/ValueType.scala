@@ -27,7 +27,6 @@ trait ValueType[T] extends TypeName {
 
 }
 
-//trait StringValue extends ValueType[String]
 
 trait IntValue extends ValueType[Int]
 

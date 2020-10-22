@@ -25,18 +25,7 @@ object OptionsFormat extends OptionsFormat
 
 trait OptionsFormat {
 
-  implicit def stringOptionsFormat[VT <: StringValue](options: Options[String, VT]): Format[VT] = new Format[VT] {
 
-    def reads(json: JsValue): JsResult[VT] = json match {
-      case JsString(value) => options.get(value) match {
-        case Some(foundOption) => JsSuccess(foundOption)
-        case _ => JsError(s"'$value' not a valid option")
-      }
-      case other => JsError(s"[$other.getClass] is not a valid value: Expected a String option")
-    }
-
-    def writes(option: VT): JsValue = JsString(option.value)
-  }
 
   implicit def intOptionsFormat[VT <: IntValue](options: Options[Int, VT]): Format[VT] = new Format[VT] {
 

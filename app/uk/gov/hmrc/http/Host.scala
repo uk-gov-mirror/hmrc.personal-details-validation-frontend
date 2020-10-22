@@ -16,6 +16,4 @@
 
 package uk.gov.hmrc.http
 
-//import uk.gov.voa.valuetype.StringValue
-
 case class Host(value: String)

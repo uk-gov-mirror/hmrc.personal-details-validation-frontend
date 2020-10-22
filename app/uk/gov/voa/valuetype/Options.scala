@@ -28,7 +28,6 @@ trait Options[T, VT <: ValueType[T]] extends TypeName {
     get(rawValue).getOrElse(throw new IllegalArgumentException(s"'$rawValue' not known as a valid ${getClass.getSimpleName}"))
 }
 
-trait StringOptions[VT <: StringValue] extends Options[String, VT]
 
 trait IntOptions[VT <: IntValue] extends Options[Int, VT]
 
@@ -41,9 +40,7 @@ trait Apply[T, VT <: ValueType[T]] {
   final def apply(x: T): VT = of(x)
 }
 
-trait StringApply[VT <: StringValue] extends Apply[String, VT] {
-  self: StringOptions[VT] =>
-}
+
 
 trait IntApply[VT <: IntValue] extends Apply[Int, VT] {
   self: IntOptions[VT] =>

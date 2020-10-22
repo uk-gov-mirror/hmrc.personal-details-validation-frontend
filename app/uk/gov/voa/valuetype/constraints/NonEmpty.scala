@@ -15,13 +15,3 @@
  */
 
 package uk.gov.voa.valuetype.constraints
-
-import uk.gov.voa.valuetype.StringValue
-
-trait NonEmpty {
-
-  self: StringValue =>
-
-  require(value.length > 0, s"${getClass.getSimpleName} cannot be empty")
-
-}

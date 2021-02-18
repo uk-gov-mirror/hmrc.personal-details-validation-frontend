@@ -18,98 +18,98 @@
 @import uk.gov.hmrc.play.views.html.helpers._
 @import uk.gov.hmrc.personaldetailsvalidation.endpoints.routes
 @import uk.gov.hmrc.views.ViewConfig
-@import uk.gov.hmrc.views.html.components.date
-@import uk.gov.hmrc.views.html.template.{main_template, error_prefix}
-
+@import uk.gov.hmrc.views.html.template.{main_template_govuk_frontend, error_prefix}
+@import uk.gov.hmrc.govukfrontend.views.html.components.{FormWithCSRF => PlayFrontendFormWithCSRF}
+@import uk.gov.hmrc.views.html.partials.{InputText, Heading1, Paragraph, DateInput}
 @import uk.gov.hmrc.personaldetailsvalidation.model.PersonalDetailsWithNino
-@this(mainTemplate: main_template, errorPrefix: error_prefix, dateField: date)
+
+@this(
+        mainTemplate: main_template_govuk_frontend,
+        errorPrefix: error_prefix,
+        dateField: DateInput,
+        govukErrorSummary : GovukErrorSummary,
+        inputText: InputText,
+        formWithCSRF: PlayFrontendFormWithCSRF,
+        submitButton: GovukButton,
+        h1 : Heading1,
+        p: Paragraph
+)
+
 @(pageForm: Form[PersonalDetailsWithNino], completionUrl: CompletionUrl
 )(implicit request: Request[_], messages: Messages, viewConfig: ViewConfig)
 
 @mainTemplate(title = errorPrefix(pageForm) + messages("personal-details.title"), completionUrl = completionUrl) {
 
     @if(pageForm.hasGlobalErrors) {
-        <div class="flash error-summary error-summary--show" id="error-summary-display" role="alert" aria-labelledby="error-summary-display" tabindex="-1">
-            <h2 id="error-summary-heading" class="h3-heading">@Messages("validation.error-summary.heading")</h2>
-            <ul class="js-error-summary-messages">
-                <li role="tooltip">
-                    @Messages("validation.error-summary.before-link-text")
-                    <a href="@completionUrl">@Messages("validation.error-summary.link-text")</a>
-                    @Messages("validation.error-summary.after-link-text")
-                </li>
-            </ul>
+        <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="govuk-error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">
+            @Messages("validation.error-summary.heading")
+            </h2>
+            <div class="govuk-error-summary__body">
+                <ul class="govuk-list govuk-error-summary__list">
+                    <li>
+                        @Messages("validation.error-summary.before-link-text")
+                        <a href="@completionUrl">@Messages("validation.error-summary.link-text")</a>
+                        @Messages("validation.error-summary.after-link-text")
+                    </li>
+                </ul>
+            </div>
         </div>
      } else {
         @if(pageForm.hasErrors) {
-            @errorSummary(
-                heading = Messages("error-summary.heading"),
-                form = pageForm
+            @govukErrorSummary(
+                ErrorSummary(
+                    errorList = pageForm.errors.map { error =>
+                        ErrorLink(
+                            href = Some("#" + error.key),
+                            content = Text(Messages(error.message)))
+                    },
+                    title = Text(Messages("validation.error-summary.heading"))
+                )
             )
         }
     }
 
-    <h1 class="heading-xlarge">
-        <span class="heading-secondary">
-            @messages("personal-details.faded-heading")
-        </span>
-        @messages("personal-details.header")
-    </h1>
+    <span class="govuk-caption-xl">@messages("personal-details.faded-heading")</span>
+    @h1(content = Text(messages("personal-details.header")))
 
+    @p(content = Text(messages("personal-details.paragraph")))
 
-    <p>@messages("personal-details.paragraph")</p>
+    @formWithCSRF(routes.PersonalDetailsCollectionController.submit(completionUrl), 'id -> "contact-hmrc-form") {
 
-    @form(routes.PersonalDetailsCollectionController.submit(completionUrl), 'class -> "form js-form", 'autocomplete -> "off", 'novalidate -> "novalidate") {
+        @inputText(
+            pageForm("firstName"),
+            label = messages("personal-details.firstname"),
+            labelClasses = "govuk-!-font-weight-bold",
+            classes = "govuk-input--width-20",
+            spellcheck = Some(false),
+            autocomplete = Some("given-name")
+        )
 
-        <div class="form-group">
-            @input(
-                field = pageForm("firstName"),
-                '_label -> messages("personal-details.firstname"),
-                '_inputClass -> "input--medium input--cleared",
-                '_labelTextClass -> "form-label-bold",
-                '_labelClass -> "soft--ends",
-                '_autoComplete -> "given-name"
-            )
-        </div>
-        <div class="form-group">
-            @input(
-                field = pageForm("lastName"),
-                '_label -> messages("personal-details.lastname"),
-                '_inputClass -> "input--medium input--cleared",
-                '_labelTextClass -> "form-label-bold",
-                '_labelClass -> "soft--ends",
-                '_autoComplete -> "family-name"
-            )
-        </div>
-        <div class="form-group">
-            <label for="nino" class="soft--ends@if(pageForm("nino").hasErrors){ form-field--error}">
-                <span class="form-label-bold">
-                    @messages("personal-details.nino")
-                </span>
-                <span class="form-hint" id="hint-nino">
-                @Html(Messages("personal-details.nino.hint"))
-                </span>
-                @pageForm("nino").errors.map { error =>
-                    <span class="error-notification" role="tooltip" data-journey="search-page:error:nino">
-                        @Messages(s"${error.message}")
-                    </span>
-                }
-                <input aria-describedby="hint-nino" type="text" class="input--medium input--cleared" name="nino" id="nino" value='@pageForm.data.getOrElse("nino","")'>
-            </label>
-            <span class="form-field--submit display-block">
-                <a href="@routes.PersonalDetailsCollectionController.showPage(completionUrl, alternativeVersion = true)"> @Messages("personal-details.nino.unavailable")</a>
-            </span>
-        </div>
-        <div class="form-group">
-            @dateField(
-                pageForm,
-                fieldName = "dateOfBirth",
-                labelKeyPrefix = "personal-details",
-                hintKeySuffix = Some("hint")
-            )
+        @inputText(
+            pageForm("lastName"),
+            label = messages("personal-details.lastname"),
+            labelClasses = "govuk-!-font-weight-bold",
+            classes = "govuk-input--width-20",
+            spellcheck = Some(false),
+            autocomplete = Some("family-name")
+        )
+
+        @inputText(
+            pageForm("nino"),
+            label = messages("personal-details.nino"),
+            labelClasses = "govuk-!-font-weight-bold",
+            classes = "govuk-input--width-10",
+            hint = Some(messages("personal-details.nino.hint")),
+            spellcheck = Some(false)
+        )
+
+        <div class="govuk-body">
+            <a href="@routes.PersonalDetailsCollectionController.showPage(completionUrl, alternativeVersion = true)"> @Messages("personal-details.nino.unavailable")</a>
         </div>
 
-        <div class="form-group form-field--submit flush--bottom">
-            <button class="button" type="submit">@Messages("continue.button.text")</button>
-        </div>
+        @dateField(pageForm, "personal-details", "dateOfBirth")
+
+        @submitButton(Button(content = Text(messages("continue.button.text"))))
     }
 }

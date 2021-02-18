@@ -19,7 +19,7 @@
 @import uk.gov.hmrc.views.ViewConfig
 @import uk.gov.hmrc.views.html.template.{main_template_govuk_frontend, error_prefix}
 @import uk.gov.hmrc.govukfrontend.views.html.components.{FormWithCSRF => PlayFrontendFormWithCSRF}
-@import uk.gov.hmrc.views.html.partials.{InputText, Heading1, DateInput}
+@import uk.gov.hmrc.views.html.partials.{InputText, Heading1, Paragraph, DateInput}
 @import uk.gov.hmrc.personaldetailsvalidation.model.PersonalDetailsWithPostcode
 
 @this(
@@ -30,7 +30,8 @@
         inputText: InputText,
         formWithCSRF: PlayFrontendFormWithCSRF,
         submitButton: GovukButton,
-        h1 : Heading1
+        h1 : Heading1,
+        p : Paragraph
 )
 @(pageForm: Form[PersonalDetailsWithPostcode], completionUrl: CompletionUrl
 )(implicit request: Request[_], messages: Messages, viewConfig: ViewConfig)
@@ -70,7 +71,7 @@
     <span class="govuk-caption-xl">@messages("personal-details.faded-heading")</span>
     @h1(content = Text(messages("personal-details.header")))
 
-    <p class="govuk-body">@messages("personal-details.paragraph")</p>
+    @p(content = Text(messages("personal-details.paragraph")))
 
     @formWithCSRF(routes.PersonalDetailsCollectionController.submit(completionUrl, alternativeVersion = true), 'id -> "contact-hmrc-form") {
 

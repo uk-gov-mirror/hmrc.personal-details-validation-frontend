@@ -31,7 +31,7 @@
     name = field.name,
     inputType = inputType,
     label = Label(classes = labelClasses, content = Text(label)),
-    hint = hint.map(h => Hint(content = Text(h))),
+    hint = hint.map(h => Hint(content = HtmlContent(h))),
     value = field.value,
     errorMessage = field.error.map(formError =>
         ErrorMessage(content = Text(messages(formError.message, formError.args: _*)))

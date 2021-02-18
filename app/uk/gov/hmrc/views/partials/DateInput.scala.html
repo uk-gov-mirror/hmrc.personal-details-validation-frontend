@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@this(underlying: GovukDateInput)
+@this(govukDateInput: GovukDateInput)
 
 @(form: Form[_], fieldPrefix: String, fieldName: String)(implicit messages: Messages)
 
@@ -22,11 +22,17 @@
     form(fieldName).errors
 }
 
+<!-- trying to check for a day error so we could apply a class in classes -->
+@form.errors.exists(_.key == s"$fieldName.day")
+@form(fieldName).errors.exists(_.key == s"$fieldPrefix.$fieldName.day.required")
+
+
+
 <div class="govuk-form-group @if(dateErrors.nonEmpty) {govuk-form-group--error}">
-    @underlying(DateInput(
+    @govukDateInput(DateInput(
         fieldName,
         items = Seq(
-            InputItem(name = s"$fieldName.day", classes = "govuk-input--width-2", label = Some(Messages(s"$fieldPrefix.$fieldName.day")), value = form(s"$fieldName.day").value),
+            InputItem(name = s"$fieldName.day", classes = s"govuk-input--width-2", label = Some(Messages(s"$fieldPrefix.$fieldName.day")), value = form(s"$fieldName.day").value),
             InputItem(name = s"$fieldName.month", classes = "govuk-input--width-2", label = Some(Messages(s"$fieldPrefix.$fieldName.month")), value = form(s"$fieldName.month").value),
             InputItem(name = s"$fieldName.year", classes = "govuk-input--width-4", label = Some(Messages(s"$fieldPrefix.$fieldName.year")), value = form(s"$fieldName.year").value)
         ),

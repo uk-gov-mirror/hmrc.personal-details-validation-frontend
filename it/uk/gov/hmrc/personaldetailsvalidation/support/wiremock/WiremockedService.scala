@@ -5,8 +5,8 @@ import uk.gov.hmrc.personaldetailsvalidation.support.PersonalDetailsFrontendServ
 
 trait WiremockedService
   extends WiremockedServiceConfig
-    with WiremockServerInstance
-    with WiremockedServiceBuilder
+//    with WiremockServerInstance
+//    with WiremockedServiceBuilder
     with BeforeAndAfterEach
     with BeforeAndAfterAll {
 

@@ -9,7 +9,7 @@ trait BaseIntegrationSpec
     with ScalaFutures with IntegrationPatience
     with ImplicitWebDriverSugar with NavigationSugar {
 
-  protected val baseUrl = s"http://localhost:1111/personal-details-validation"
+  protected val baseUrl = s"http://localhost:$port/personal-details-validation"
 
   protected def goTo(url: String): Unit = super.goTo(s"$baseUrl$url")
 
